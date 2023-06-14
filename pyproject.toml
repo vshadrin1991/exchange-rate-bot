@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "exchange-rate-bot"
+version = "0.1.0"
+description = "Telegram bot"
+authors = [""]
+readme = "README.md"
+packages = [{include = "exchange_rate_bot"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pytelegrambotapi = "^4.12.0"
+stubs = "^1.0.0"
+coloredlogs = "^15.0.1"
+
+[tool.black]
+skip-string-normalization = true
+
+[tool.isort]
+profile = "black"
+lines_after_imports = 2
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -1,0 +1,2 @@
+TELEBOT_TOKEN = ""
+EXCHANGE_API = ""
