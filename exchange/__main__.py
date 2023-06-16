@@ -3,7 +3,8 @@ import requests
 import telebot
 
 from configs import config
-from entity import User, ExratesRates
+from entity import ExratesRates, User
+
 
 coloredlogs.install()
 
