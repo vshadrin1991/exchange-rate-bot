@@ -13,4 +13,8 @@ Telegram exchange rate bot
 
 # start commands
 
-**poetry run python3 main.py**
+1. Export application varibles
+   **export TELEBOT_TOKEN=<string>**
+   **export EXCHANGE_API=<url>**
+2. Run application module
+   **poetry run python3 -m exchange**

@@ -2,14 +2,13 @@ import coloredlogs
 import requests
 import telebot
 
-import configs.config as env_data
-from entity.exrates_rates import ExratesRates
-from entity.user import User
+from configs import config
+from entity import ExratesRates, User
 
 
 coloredlogs.install()
 
-bot = telebot.TeleBot(env_data.TELEBOT_TOKEN)
+bot = telebot.TeleBot(config.TELEBOT_TOKEN)
 log = coloredlogs.logging
 
 
@@ -31,7 +30,7 @@ def current_exrates_rates(message) -> telebot.types.Message:
     )
     try:
         response = requests.get(
-            f'{env_data.EXCHANGE_API}/exrates/rates', params={'periodicity': 0}
+            f'{config.EXCHANGE_API}/exrates/rates', params={'periodicity': 0}
         )
     except requests.ConnectionError:
         return bot.reply_to(message, "Opps... something went wrong. Please try later.")

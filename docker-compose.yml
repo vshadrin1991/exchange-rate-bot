@@ -1,0 +1,17 @@
+version: '3.7'
+
+services:
+  postgres:
+    image: postgres
+    container_name: py40
+    environment:
+      POSTGRES_USER: py40
+      POSTGRES_PASSWORD: py40
+      POSTGRES_DB: py40
+    volumes:
+      - db-data:/var/lib/postgresql
+    ports:
+      - '5432:5432'
+
+volumes:
+  db-data: null

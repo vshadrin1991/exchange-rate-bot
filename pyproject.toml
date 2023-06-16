@@ -11,6 +11,11 @@ python = "^3.10"
 pytelegrambotapi = "^4.12.0"
 stubs = "^1.0.0"
 coloredlogs = "^15.0.1"
+sqlalchemy = "^2.0.16"
+black = "^23.3.0"
+isort = "^5.12.0"
+flake8 = "^6.0.0"
+pre-commit = "^3.3.2"
 
 [tool.black]
 skip-string-normalization = true
