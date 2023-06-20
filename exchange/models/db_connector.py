@@ -1,7 +1,6 @@
+from configs import config
 from db_connector_meta import DBConnectorMeta
 from sqlalchemy import create_engine
-
-from configs import config
 
 
 class DBConnector(metaclass=DBConnectorMeta):

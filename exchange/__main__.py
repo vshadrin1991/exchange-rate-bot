@@ -1,15 +1,58 @@
 import coloredlogs
 import requests
 import telebot
-
 from configs import config
 from entity import ExratesRates, User
+from sqlalchemy import (
+    Column,
+    Integer,
+    MetaData,
+    String,
+    Table,
+    create_engine,
+    insert,
+    select,
+)
 
 
 coloredlogs.install()
 
 bot = telebot.TeleBot(config.TELEBOT_TOKEN)
 log = coloredlogs.logging
+
+engine = create_engine(url=config.DB_URL)
+session = engine.connect()
+metadata = MetaData()
+
+
+def log_user(message):
+    users = Table(
+        'users',
+        metadata,
+        Column('id', Integer, primary_key=True),
+        Column('user_id', Integer),
+        Column('first_name', String),
+        Column('last_name', String),
+        Column('html_text', String),
+        Column('date', String),
+        extend_existing=True,
+    )
+    metadata.create_all(session)
+
+    insert_log = insert(users).values(
+        user_id=message.from_user.id,
+        first_name=message.from_user.first_name,
+        last_name=message.from_user.last_name,
+        html_text=message.html_text,
+        date=message.date,
+    )
+    session.execute(insert_log)
+    stmt = select("*").select_from(users)
+    results = session.execute(stmt).fetchall()
+
+    session.commit()
+    for result in results:
+        log.info(result)
 
 
 @bot.message_handler(commands=['start', 'help'])
@@ -19,6 +62,7 @@ def send_welcome(message):
 
 @bot.message_handler(func=lambda message: True)
 def current_exrates_rates(message) -> telebot.types.Message:
+    log_user(message)
     log.info(
         User(
             user_id=message.from_user.id,

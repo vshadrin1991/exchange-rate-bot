@@ -18,3 +18,5 @@ Telegram exchange rate bot
    **export EXCHANGE_API=<url>**
 2. Run application module
    **poetry run python3 -m exchange**
+
+postgresql://py40:py40@127.0.0.1:5432/postgres
