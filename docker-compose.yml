@@ -1,13 +1,24 @@
 version: '3.7'
 
 services:
+  exchange:
+    image: exchange
+    build:
+      context: .
+    environment:
+      TELEBOT_TOKEN: ''
+      EXCHANGE_API: ''
+    depends_on:
+      - postgres
+    restart: on-failure
+
   postgres:
     image: postgres
-    container_name: py40
+    container_name: exchange
     environment:
-      POSTGRES_USER: py40
-      POSTGRES_PASSWORD: py40
-      POSTGRES_DB: py40
+      POSTGRES_USER: bot_exchange
+      POSTGRES_PASSWORD: bot_exchange
+      POSTGRES_DB: exchange_db
     volumes:
       - db-data:/var/lib/postgresql
     ports:

@@ -1,21 +1,21 @@
 [tool.poetry]
-name = "exchange-rate-bot"
+name = "for-import-tests"
 version = "0.1.0"
-description = "Telegram bot"
-authors = [""]
+description = ""
+authors = ["vshadrin1991 <v.shadrin@setplex.com>"]
 readme = "README.md"
-packages = [{include = "exchange_rate_bot"}]
+packages = [{include = "for_import_tests"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
 pytelegrambotapi = "^4.12.0"
-stubs = "^1.0.0"
 coloredlogs = "^15.0.1"
 sqlalchemy = "^2.0.16"
 black = "^23.3.0"
 isort = "^5.12.0"
 flake8 = "^6.0.0"
-pre-commit = "^3.3.2"
+pre-commit = "^3.3.3"
+psycopg2 = "^2.9.6"
 
 [tool.black]
 skip-string-normalization = true
