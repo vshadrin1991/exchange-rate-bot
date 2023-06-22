@@ -13,10 +13,19 @@ Telegram exchange rate bot
 
 # start commands
 
+# Run localy
+
 1. Export application varibles
    **export TELEBOT_TOKEN=<string>**
    **export EXCHANGE_API=<url>**
 2. Run application module
    **poetry run python3 -m exchange**
 
-postgresql://py40:py40@127.0.0.1:5432/postgres
+# Run in docker
+
+1. Navigate to **docker-compose.yml**
+   configurate :
+   **TELEBOT_TOKEN=<string>**
+   **EXCHANGE_API=<url>**
+2. Run application
+   **docker compose up**

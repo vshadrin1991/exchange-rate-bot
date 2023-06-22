@@ -15,8 +15,10 @@ class DBConnector(metaclass=SingletoneMeta):
 
     def get_connection(self):
         try:
+            Log.info('Try to connect to data base')
             conndection = self._engine.connect()
-        except:
-            Log.error('Opps... DB connection error')
+        except RuntimeError:
+            raise RuntimeError(f'Opps... DB connection error to {config.DB_URL}')
         else:
+            Log.info('Successfully DB connection')
             return conndection

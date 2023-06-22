@@ -1,5 +1,6 @@
 from .db_connector import DBConnector
-from .user_log import UserLog
+from .db_user import DBUser
+from .db_user_log import DBUserLog
 
 
-__all__ = ["DBConnector", "UserLog"]
+__all__ = ["DBConnector", "DBUserLog", "DBUser"]

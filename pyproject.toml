@@ -4,7 +4,7 @@ version = "0.1.0"
 description = ""
 authors = ["vshadrin1991 <v.shadrin@setplex.com>"]
 readme = "README.md"
-packages = [{include = "for_import_tests"}]
+packages = [{include = "exchange"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"

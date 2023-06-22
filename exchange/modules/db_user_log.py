@@ -6,7 +6,7 @@ from .base import Base
 from .db_connector import DBConnector
 
 
-class UserLog(Base):
+class DBUserLog(Base):
     __tablename__ = 'user_log'
 
     id: Mapped[int] = mapped_column(primary_key=True)
