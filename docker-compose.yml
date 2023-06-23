@@ -8,6 +8,7 @@ services:
     environment:
       TELEBOT_TOKEN: <string>
       EXCHANGE_API: <url>
+      LOCALIZATION: RUS
       DB_LOGIN: bot_exchange
       DB_PASSWORD: bot_exchange
       DB_HOST: postgres

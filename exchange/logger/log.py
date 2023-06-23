@@ -4,7 +4,7 @@ from ..meta import SingletoneMeta
 
 
 class Log(metaclass=SingletoneMeta):
-    def __init__(self, log_path: str = '') -> None:
+    def __init__(self) -> None:
         coloredlogs.install()
 
     @staticmethod

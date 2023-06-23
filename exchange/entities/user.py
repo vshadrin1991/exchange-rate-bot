@@ -8,3 +8,4 @@ class User:
     last_name: str
     html_text: str
     date: int
+    chat_id: int

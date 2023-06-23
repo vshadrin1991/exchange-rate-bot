@@ -20,14 +20,6 @@ class DBUserLog(Base):
     def __repr__(self) -> str:
         return f'user_id={self.user_id}, html_text={self.html_text}, date={self.date}'
 
-    def select_all(self) -> tuple:
-        return (
-            DBConnector()
-            .get_connection()
-            .execute(select('*').select_from(self.__class__))
-            .fetchall()
-        )
-
     def insert(self, user: User):
         DBConnector().get_connection().execute(
             insert(self.__class__).values(
@@ -38,3 +30,11 @@ class DBUserLog(Base):
                 }
             )
         ).connection.commit()
+
+    def select_all(self) -> tuple:
+        return (
+            DBConnector()
+            .get_connection()
+            .execute(select('*').select_from(self.__class__))
+            .fetchall()
+        )
