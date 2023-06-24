@@ -1,8 +1,9 @@
 from sqlalchemy import String, insert, select
 from sqlalchemy.orm import Mapped, mapped_column
 
-from ..entities import User
-from ..logger import Log
+from exchange.entities import User
+from exchange.logger import Log
+
 from .base import Base
 from .db_connector import DBConnector
 
@@ -15,8 +16,9 @@ class DBUser(Base):
     first_name: Mapped[str] = mapped_column(String(50))
     last_name: Mapped[str] = mapped_column(String(50))
 
-    def __init__(self):
-        self.metadata.create_all(DBConnector().engine)
+    def __init__(self, connector: DBConnector):
+        self._connector: DBConnector = connector
+        self.metadata.create_all(self._connector.engine)
 
     def __repr__(self) -> str:
         return f'user_id={self.user_id}, first_name={self.first_name}, last_name={self.last_name}'
@@ -24,18 +26,15 @@ class DBUser(Base):
     def insert(self, user: User):
         if (
             len(
-                DBConnector()
-                .get_connection()
-                .execute(
+                self._connector.connection.execute(
                     select('*')
                     .select_from(self.__class__)
                     .where(self.__class__.user_id == user.user_id)
-                )
-                .fetchall()
+                ).fetchall()
             )
             == 0
         ):
-            DBConnector().get_connection().execute(
+            self._connector.connection.execute(
                 insert(self.__class__).values(
                     {
                         self.__class__.user_id: user.user_id,

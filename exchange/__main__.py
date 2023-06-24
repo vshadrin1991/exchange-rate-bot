@@ -1,23 +1,23 @@
 import requests
 import telebot
+from sqlalchemy.exc import OperationalError
 
-from .configs import config, localization
-from .entities import ExratesRates, User
+from .configs import config
+from .entities import CurrencyRate, User
+from .localizations import Localization
 from .logger import Log
-from .modules import DBConnector, DBUser, DBUserLog
+from .models import DBConnector, DBUser, DBUserLog
 
 
 log = Log()
-local = localization.RUS
+localization = Localization()
+db_connection = DBConnector()
 bot = telebot.TeleBot(config.TELEBOT_TOKEN, parse_mode=None)
-session = DBConnector().get_connection()
-user_db_log = DBUserLog()
-user_db = DBUser()
 
 
 @bot.message_handler(commands=['start'])
 def on_start(message: telebot.types.Message):
-    bot.reply_to(message, local['start'])
+    bot.reply_to(message, localization.local['start'])
 
 
 @bot.message_handler(commands=['help', 'list'])
@@ -27,9 +27,9 @@ def on_help(message: telebot.types.Message):
             f'{config.EXCHANGE_API}/exrates/rates', params={'periodicity': 0}
         )
     except requests.ConnectionError:
-        bot.reply_to(message, local['errors']['system'])
+        bot.reply_to(message, localization.local['errors']['system'])
     else:
-        rates: list[ExratesRates] = [ExratesRates(**rate) for rate in response.json()]
+        rates: list[CurrencyRate] = [CurrencyRate(**rate) for rate in response.json()]
         buttons = [
             [
                 telebot.types.InlineKeyboardButton(
@@ -40,65 +40,81 @@ def on_help(message: telebot.types.Message):
         ]
         keyboard = telebot.types.InlineKeyboardMarkup(buttons)
         bot.send_message(
-            chat_id=message.chat.id, text=local['select_country'], reply_markup=keyboard
+            chat_id=message.chat.id,
+            text=localization.local['select_country'],
+            reply_markup=keyboard,
         )
 
 
 @bot.callback_query_handler(func=lambda message: True)
+def callback_query_exrates_rates(message: telebot.types.CallbackQuery):
+    user = User(
+        user_id=message.from_user.id,
+        first_name=message.from_user.first_name,
+        last_name=message.from_user.last_name,
+        message=message.data,
+        date=message.message.date,
+        chat_id=message.message.chat.id,
+    )
+    exrates_rates(user)
+
+
 @bot.message_handler(func=lambda message: True)
-def current_exrates_rates(message) -> telebot.types.Message:
-    if isinstance(message, telebot.types.Message):
-        message_handler: telebot.types.Message = message
-        user = User(
-            user_id=message_handler.from_user.id,
-            first_name=message_handler.from_user.first_name,
-            last_name=message_handler.from_user.last_name,
-            html_text=message_handler.html_text,
-            date=message_handler.date,
-            chat_id=message_handler.chat.id,
+def message_handler_exrates_rates(message: telebot.types.Message):
+    user = User(
+        user_id=message.from_user.id,
+        first_name=message.from_user.first_name,
+        last_name=message.from_user.last_name,
+        message=message.html_text,
+        date=message.date,
+        chat_id=message.chat.id,
+    )
+    exrates_rates(user)
+
+
+def exrates_rates(user: User):
+    try:
+        log.info('insert user data to DB...')
+        DBUserLog(db_connection).insert(user)
+        DBUser(db_connection).insert(user)
+    except OperationalError as err:
+        log.error(err)
+        bot.send_message(
+            chat_id=user.chat_id, text=localization.local['errors']['system']
         )
-    else:
-        callback_handler: telebot.types.CallbackQuery = message
-        user = User(
-            user_id=callback_handler.from_user.id,
-            first_name=callback_handler.from_user.first_name,
-            last_name=callback_handler.from_user.last_name,
-            html_text=callback_handler.data,
-            date=callback_handler.message.date,
-            chat_id=callback_handler.message.chat.id,
-        )
-    log.info('Insert user data to DB...')
-    user_db_log.insert(user)
-    user_db.insert(user)
+        return
     try:
         response = requests.get(
             f'{config.EXCHANGE_API}/exrates/rates', params={'periodicity': 0}
         )
-    except requests.ConnectionError:
-        return bot.send_message(chat_id=user.chat_id, text=local['errors']['system'])
-    else:
-        if response.status_code != 200:
-            return bot.send_message(
-                chat_id=user.chat_id, text=local['errors']['system']
-            )
-        rates: list[ExratesRates] = [
-            rate
-            for rate in [ExratesRates(**rate) for rate in response.json()]
-            if rate.Cur_Abbreviation == str(user.html_text).upper()
-        ]
-        return (
-            bot.send_message(
-                chat_id=user.chat_id,
-                text=local['rate'].format(
-                    rates[0].Cur_Name, rates[0].Cur_Scale, rates[0].Cur_OfficialRate
-                ),
-            )
-            if len(rates) == 1
-            else bot.send_message(
-                chat_id=user.chat_id,
-                text=local['errors']['not_found'].format(user.html_text),
-            )
+    except requests.ConnectionError as err:
+        log.error(err)
+        bot.send_message(
+            chat_id=user.chat_id, text=localization.local['errors']['system']
         )
+        return
+    if response.status_code != 200:
+        bot.send_message(
+            chat_id=user.chat_id, text=localization.local['errors']['system']
+        )
+        return
+    rates: list[CurrencyRate] = [
+        rate
+        for rate in [CurrencyRate(**rate) for rate in response.json()]
+        if rate.Cur_Abbreviation == str(user.message).upper()
+    ]
+    if len(rates) != 1:
+        bot.send_message(
+            chat_id=user.chat_id,
+            text=localization.local['errors']['not_found'].format(user.message),
+        )
+        return
+    bot.send_message(
+        chat_id=user.chat_id,
+        text=localization.local['rate'].format(
+            rates[0].Cur_Name, rates[0].Cur_Scale, rates[0].Cur_OfficialRate
+        ),
+    )
 
 
 bot.infinity_polling()

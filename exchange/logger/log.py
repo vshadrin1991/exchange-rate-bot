@@ -1,10 +1,13 @@
+import logging
+
 import coloredlogs
 
-from ..meta import SingletoneMeta
+from exchange.meta import SingletoneMeta
 
 
 class Log(metaclass=SingletoneMeta):
     def __init__(self) -> None:
+        logging.basicConfig(filename='log.txt')
         coloredlogs.install()
 
     @staticmethod

@@ -6,6 +6,6 @@ class User:
     user_id: int
     first_name: str
     last_name: str
-    html_text: str
+    message: str
     date: int
     chat_id: int

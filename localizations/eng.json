@@ -1,0 +1,9 @@
+{
+  "start": "Hello there!\nI can help you find out the exchange rates for today according to the NBRB.\nIf you want to know about applicable currencies, just type /help\nAnd if you know your currency, enter the currency, for example => USD, EUR, ...",
+  "rate": "Exchange rate for {} for {} units(y)\n\n{}",
+  "select_country": "Select country",
+  "errors": {
+    "system": "Oops, something went wrong. Please try again later.",
+    "not_found": "Oops... I didn't find such a currency => {}\nIf you do not remember the currency, use the command /list"
+  }
+}

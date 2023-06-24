@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "for-import-tests"
+name = "exchange rate bot"
 version = "0.1.0"
 description = ""
 authors = ["vshadrin1991 <v.shadrin@setplex.com>"]
@@ -8,14 +8,17 @@ packages = [{include = "exchange"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
+
+[tool.poetry.group.dev.dependencies]
 pytelegrambotapi = "^4.12.0"
 coloredlogs = "^15.0.1"
-sqlalchemy = "^2.0.16"
-black = "^23.3.0"
+sqlalchemy = "^2.0.18"
+black = "^23.7.0"
 isort = "^5.12.0"
 flake8 = "^6.0.0"
 pre-commit = "^3.3.3"
 psycopg2 = "^2.9.6"
+python-dotenv = "^1.0.0"
 
 [tool.black]
 skip-string-normalization = true

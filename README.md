@@ -1,6 +1,7 @@
 # exchange-rate-bot
 
 Telegram exchange rate bot
+https://t.me/ExchangeRatesPy40Bot
 
 # prepare data
 
@@ -13,19 +14,16 @@ Telegram exchange rate bot
 
 # start commands
 
-# Run localy
-
-1. Export application varibles
-   **export TELEBOT_TOKEN=<string>**
-   **export EXCHANGE_API=<url>**
-2. Run application module
-   **poetry run python3 -m exchange**
-
 # Run in docker
 
-1. Navigate to **docker-compose.yml**
+1. Create **.env** file in root
+
    configurate :
+
    **TELEBOT_TOKEN=<string>**
+
    **EXCHANGE_API=<url>**
+
 2. Run application
+
    **docker compose up**

@@ -1,5 +1,5 @@
-from .exrates_rates import ExratesRates
+from .currency_rate import CurrencyRate
 from .user import User
 
 
-__all__ = ["User", "ExratesRates"]
+__all__ = ["User", "CurrencyRate"]

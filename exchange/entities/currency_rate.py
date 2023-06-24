@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 
 @dataclass
-class ExratesRates:
+class CurrencyRate:
     Cur_ID: int
     Date: str
     Cur_Abbreviation: str
