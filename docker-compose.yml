@@ -1,0 +1,31 @@
+version: '3.7'
+
+services:
+  exchange:
+    image: exchange
+    container_name: exchange
+    build:
+      context: .
+    environment:
+      LOCALIZATION: RUS
+      DB_LOGIN: bot_exchange
+      DB_PASSWORD: bot_exchange
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: exchange_db
+    depends_on:
+      - postgres
+    restart: on-failure
+
+  postgres:
+    image: postgres
+    container_name: exchange_db
+    environment:
+      POSTGRES_USER: bot_exchange
+      POSTGRES_PASSWORD: bot_exchange
+      POSTGRES_DB: exchange_db
+    volumes:
+      - db-data:/var/lib/postgresql
+
+volumes:
+  db-data: null
